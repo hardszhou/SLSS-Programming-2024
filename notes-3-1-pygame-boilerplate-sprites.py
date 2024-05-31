@@ -10,9 +10,7 @@ HEIGHT = 760
 SCREEN_SIZE = (WIDTH, HEIGHT)
 
 LOGO_IMAGES = [
-    pygame.image.load("./Images/dvd-logo.png"),
-    pygame.image.load("./Images/dvd-logo-2.svg"),
-    pygame.image.load("./Images/dvd-logo-3.gif"),
+    pygame.image.load("./Images/dvd-logo.png")
 ]
 
 
