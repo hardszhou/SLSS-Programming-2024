@@ -5,11 +5,6 @@ import pygame as pg
 # COLOURS
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-EMERALD = (21, 219, 147)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-GRAY = (128, 128, 128)
 
 WIDTH = 1280  # Pixels
 HEIGHT = 720
@@ -17,29 +12,39 @@ SCREEN_SIZE = (WIDTH, HEIGHT)
 
 
 class Snowflake(pg.sprite.Sprite):
-    def __init__(self, size: int):
+    def __init__(self):
         """
-        Params:
-            size: diameter of snowflake in pixels
+        Initialize a snowflake with random size, position, and velocity.
         """
-        # Super class constructor
         super().__init__()
 
-        # Create a blank surface
-        self.image = pg.Surface((size, size))
+        # Random size between 5 and 15 pixels
+        self.size = random.randint(5, 15)
+
+        # Create a blank surface with an alpha channel
+        self.image = pg.Surface((self.size, self.size), pg.SRCALPHA)
 
         # Draw a circle inside of it
-        pg.draw.circle(self.image, WHITE, (size // 2, size // 2), size // 2)
+        pg.draw.circle(self.image, WHITE, (self.size // 2, self.size // 2), self.size // 2)
 
         self.rect = self.image.get_rect()
 
-        # Spawn it in the middle of the screen
-        # Chooses a random x-coordinate
-        self.rect.centerx = random.randrange(0, WIDTH + 1)
-        self.rect.centery = HEIGHT // 2
+        # Random starting position at the top of the screen
+        self.rect.x = random.randint(0, WIDTH)
+        self.rect.y = random.randint(-HEIGHT, 0)
+
+        # Random velocity
+        self.velocity = random.uniform(1, 3)
 
     def update(self):
         """Make the snow fall from top to bottom"""
+        self.rect.y += self.velocity
+
+        # Reset position if it falls below the screen
+        if self.rect.top > HEIGHT:
+            self.rect.x = random.randint(0, WIDTH)
+            self.rect.y = random.randint(-HEIGHT, 0)
+            self.velocity = random.uniform(1, 3)
 
 
 def start():
@@ -57,7 +62,7 @@ def start():
 
     # Add 100 snowflakes to the all_sprites Group
     for _ in range(100):
-        all_sprites.add(Snowflake(10))
+        all_sprites.add(Snowflake())
 
     pg.display.set_caption("Snowfall Landscape")
 
