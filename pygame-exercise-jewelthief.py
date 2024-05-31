@@ -1,9 +1,4 @@
-# pygame-exercise-jewelthief.py
-
-# A Jewel Thief Clone
-
 import random
-
 import pygame as pg
 
 # --CONSTANTS--
@@ -22,13 +17,6 @@ SCREEN_SIZE = (WIDTH, HEIGHT)
 
 NUM_COINS = 100
 NUM_ENEMIES = 5
-
-GOOMBA_IMAGE = pg.image.load("./Images/goomba.png")
-
-GOOMBA_IMAGE_SMALL = pg.transform.scale(
-    GOOMBA_IMAGE, (GOOMBA_IMAGE.get_width() // 2, GOOMBA_IMAGE.get_height() // 2)
-)
-
 
 class Player(pg.sprite.Sprite):
     def __init__(self):
@@ -73,11 +61,11 @@ class Coin(pg.sprite.Sprite):
 
 
 class Goomba(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, image):
         super().__init__()
 
         # set the image to a scaled version
-        self.image = GOOMBA_IMAGE_SMALL
+        self.image = image
 
         self.rect = self.image.get_rect()
 
@@ -111,23 +99,20 @@ class Goomba(pg.sprite.Sprite):
 
     def increase_speed(self):
         """Increase speed to a limit"""
-
         if abs(self.vel_x) < self.max_speed:
-            if self.vel_x > 0:
-                self.vel_x += 0.25
-            else:
-                self.vel_x -= 0.25
+            self.vel_x += 0.25 if self.vel_x > 0 else -0.25
         if abs(self.vel_y) < self.max_speed:
-            if self.vel_y > 0:
-                self.vel_y += 0.25
-            else:
-                self.vel_y -= 0.25
+            self.vel_y += 0.25 if self.vel_y > 0 else -0.25
 
 
 def start():
     """Environment Setup and Game Loop"""
 
     pg.init()
+
+    # Load images after initializing pygame
+    GOOMBA_IMAGE = pg.image.load("./Images/goomba.png")
+    GOOMBA_IMAGE_SMALL = pg.transform.scale(GOOMBA_IMAGE, (GOOMBA_IMAGE.get_width() // 2, GOOMBA_IMAGE.get_height() // 2))
 
     # Hide the mouse
     pg.mouse.set_visible(False)
@@ -153,14 +138,12 @@ def start():
     # Create Coin objects
     for _ in range(NUM_COINS):
         coin = Coin()
-
         all_sprites.add(coin)
         coin_sprites.add(coin)
 
     # Create enemies
     for _ in range(NUM_ENEMIES):
-        enemy = Goomba()
-
+        enemy = Goomba(GOOMBA_IMAGE_SMALL)
         all_sprites.add(enemy)
         enemy_sprites.add(enemy)
 
@@ -182,17 +165,14 @@ def start():
         for coin in coins_collided:
             # Increase the score by 10
             score += 10
-
             print(f"Score: {score}")
 
         # If the coin_sprites group is empty, respawn all coins and increase enemy speed
         if len(coin_sprites) <= 0:
             for _ in range(NUM_COINS):
                 coin = Coin()
-
                 all_sprites.add(coin)
                 coin_sprites.add(coin)
-
             for sprite in enemy_sprites:
                 sprite.increase_speed()
 
@@ -202,7 +182,6 @@ def start():
         # If collided with enemy, decrease the player's life
         for enemy in enemies_collided:
             player.lives -= 0.1
-
             print(int(player.lives))
 
         # --- Draw items
@@ -222,10 +201,8 @@ def start():
         # --- Tick the Clock
         clock.tick(60)  # 60 fps
 
-
 def main():
     start()
-
 
 if __name__ == "__main__":
     main()
