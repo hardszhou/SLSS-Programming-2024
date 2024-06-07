@@ -1,3 +1,6 @@
+# platformer-game.py
+# Simple platformer game
+
 import pygame as pg
 
 # --CONSTANTS--
@@ -24,7 +27,7 @@ class Player(pg.sprite.Sprite):
         self.image = pg.Surface((40, 40))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH // 2, HEIGHT - 200)
+        self.rect.center = (WIDTH // 2, HEIGHT - 100)  # Initial position away from spikes and goal
         self.change_x = 0
         self.change_y = 0
         self.on_ground = False
@@ -109,7 +112,7 @@ class Spike(pg.sprite.Sprite):
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = x
-        self.rect.y = y - SPIKE_HEIGHT
+        self.rect.y = y - SPIKE_HEIGHT  # Adjust the y position to be on top of the platform
 
 class Goal(pg.sprite.Sprite):
     def __init__(self, x, y, width=30, height=30):
@@ -118,7 +121,7 @@ class Goal(pg.sprite.Sprite):
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
         self.rect.x = x
-        self.rect.y = y - height
+        self.rect.y = y - height  # Adjust the y position to be on top of the platform
 
 def draw_text(surface, text, size, x, y):
     font = pg.font.Font(None, size)
@@ -183,24 +186,26 @@ def main():
     ]
 
     for platform in level:
+        platforms.add
         platforms.add(platform)
         all_sprites.add(platform)
 
-    # Add spikes on platforms
-    spikes.add(Spike(300, HEIGHT - 240))
-    spikes.add(Spike(500, HEIGHT - 340))
-    spikes.add(Spike(200, HEIGHT - 440))
-    spikes.add(Spike(400, HEIGHT - 540))
+    # Add spikes on platforms, ensuring they are on top of the platform
+    spikes.add(Spike(350, HEIGHT - 240))  # Adjusted position
+    spikes.add(Spike(550, HEIGHT - 340))  # Adjusted position
+    spikes.add(Spike(250, HEIGHT - 440))  # Adjusted position
+    spikes.add(Spike(450, HEIGHT - 540))  # Adjusted position
     for spike in spikes:
         all_sprites.add(spike)
 
     # Add spikes on the ground
-    spikes.add(Spike(400, HEIGHT - 60))
+    spikes.add(Spike(100, HEIGHT - 40))
+    spikes.add(Spike(700, HEIGHT - 40))
     for spike in spikes:
         all_sprites.add(spike)
 
-    # Add goal
-    goal = Goal(WIDTH // 2, HEIGHT - 540 - 60)
+    # Add goal on a platform, ensuring it doesn't overlap with any spikes
+    goal = Goal(650, HEIGHT - 540)  # Adjusted position
     goals.add(goal)
     all_sprites.add(goal)
 
